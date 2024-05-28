@@ -1,6 +1,7 @@
 package testhelpers
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"testing"
@@ -9,6 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 const (
@@ -21,7 +24,7 @@ var (
 	PostgresImage = "postgres:16-alpine"
 )
 
-func SetupPostgresContainer(t *testing.T) (func(), string) {
+func SetupPostgresContainer(t *testing.T) (func() error, string) {
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
 		Image:        PostgresImage,
@@ -45,8 +48,19 @@ func SetupPostgresContainer(t *testing.T) (func(), string) {
 	port, err := pgContainer.MappedPort(ctx, "5432")
 	require.NoError(t, err)
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", DBUser, DBPassword, host, port.Port(), DBName)
-	teardown := func() {
-		require.NoError(t, pgContainer.Terminate(ctx))
+	teardown := func() error {
+		return pgContainer.Terminate(ctx)
 	}
 	return teardown, dsn
+}
+
+func SetupPostgresWithGorm(t *testing.T) (*gorm.DB, func() error) {
+	teardown, dsn := SetupPostgresContainer(t)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	require.NoError(t, err)
+	sqlDB, err := db.DB()
+	require.NoError(t, err)
+	return db, func() error {
+		return cmp.Or(sqlDB.Close(), teardown())
+	}
 }

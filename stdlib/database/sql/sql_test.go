@@ -12,4 +12,5 @@ func TestOpen(t *testing.T) {
 	open, err := sql.Open("mysql", "user:password@/dbname")
 	require.NoError(t, err)
 	open.SetConnMaxIdleTime(30 * time.Minute)
+	open.SetConnMaxLifetime(10 * time.Millisecond)
 }

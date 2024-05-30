@@ -8,6 +8,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.31.0
 	github.com/tnclong/go-que v0.0.0-20240226030728-4e1f3c8ec781
+	golang.org/x/sys v0.20.0
 	golang.org/x/time v0.3.0
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
@@ -66,7 +67,6 @@ require (
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
 	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/mod v0.16.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.13.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230731190214-cbb8c96f2d6d // indirect

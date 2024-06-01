@@ -57,3 +57,22 @@ func TestTimeTimerNoMemoryLeak(t *testing.T) {
 
 	assert.Less(t, int(finalAlloc-initialAlloc), 10*1024*1024)
 }
+
+func TestExecuteTaskPeriodically(t *testing.T) {
+	// execute task periodically
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			executeTask(t)
+		}
+	}
+}
+
+func executeTask(t *testing.T) {
+	fmt.Println("Executing task at", time.Now())
+	// 在这里执行你的任务
+	time.Sleep(2 * time.Second) // 模拟任务执行时间
+}

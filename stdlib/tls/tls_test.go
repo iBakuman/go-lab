@@ -34,5 +34,5 @@ func TestTLSHandshake(t *testing.T) {
 		}
 	}()
 
-	clientConfig
+	// clientConfig
 }

@@ -54,3 +54,33 @@ func TestForLoop(t *testing.T) {
 	// Seems like require.Equal compares the values of the two pointers, not the memory addresses.
 	require.Equal(t, &d2[0], &d2[1])
 }
+
+func TestTripleForLoop(t *testing.T) {
+	ch := make(chan int, 1)
+	ch <- 1
+	close(ch)
+	for i := 0; i < 5; i++ {
+		t.Logf("--------------------------------------------------------")
+		t.Logf("i: %d", i)
+		for j := 0; j < 3; j++ {
+			t.Logf("+++++++++++++++++++++++++++++++++++++++")
+			t.Logf("j: %d", j)
+			select {
+			case <-ch:
+				for k := 0; k < 4; k++ {
+					t.Logf("==================")
+					t.Logf("k: %d", k)
+					if k == 1 {
+						break
+					}
+				}
+			}
+			if j == 2 {
+				break
+			}
+		}
+		if i == 3 {
+			break
+		}
+	}
+}

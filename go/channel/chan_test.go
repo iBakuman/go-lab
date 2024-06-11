@@ -68,6 +68,26 @@ func TestOpOnChannel(t *testing.T) {
 				close(ch)
 			})
 		})
+
+		t.Run("for-range on nil channel", func(t *testing.T) {
+			worker := func(message chan string) <-chan struct{} {
+				done := make(chan struct{})
+				go func() {
+					defer close(done)
+					for msg := range message {
+						t.Log(msg)
+					}
+				}()
+				return done
+			}
+			var msgChan chan string
+			done := worker(msgChan)
+			select {
+			case <-done:
+				t.Fatal("should not reach here")
+			case <-time.After(300 * time.Millisecond):
+			}
+		})
 	})
 
 	t.Run("closed channel", func(t *testing.T) {

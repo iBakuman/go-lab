@@ -1,6 +1,6 @@
 SRC_ROOT=${SRC_ROOT:-$(dirname $0)/../..}
 
-cd ${SRC_ROOT}
+cd ${SRC_ROOT} || exit 1
 
 PROTO_ROOT=api
 PROTO_FILES=$(find ./${PROTO_ROOT} -not -path "./${PROTO_ROOT}/validate/*" -name *.proto)
@@ -21,5 +21,5 @@ do
     --openapiv2_opt=generate_unbound_methods=true \
     --openapiv2_opt=openapi_naming_strategy=fqn \
     --validate_out="lang=go,paths=source_relative:./${PROTO_OUT}" \
-    ${PROTO_FILE}
+    "${PROTO_FILE}"
 done

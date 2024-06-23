@@ -1,0 +1,222 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "echo/echo.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Echo"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/grpc.examples.echo.Echo/BidirectionalStreamingEcho": {
+      "post": {
+        "summary": "BidirectionalStreamingEcho is bidi streaming.",
+        "operationId": "Echo_BidirectionalStreamingEcho",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/grpc.examples.echo.EchoResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/google.rpc.Status"
+                }
+              },
+              "title": "Stream result of grpc.examples.echo.EchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "EchoRequest is the request for echo. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/grpc.examples.echo.EchoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Echo"
+        ]
+      }
+    },
+    "/grpc.examples.echo.Echo/ClientStreamingEcho": {
+      "post": {
+        "summary": "ClientStreamingEcho is client side streaming.",
+        "operationId": "Echo_ClientStreamingEcho",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.examples.echo.EchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "EchoRequest is the request for echo. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/grpc.examples.echo.EchoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Echo"
+        ]
+      }
+    },
+    "/grpc.examples.echo.Echo/ServerStreamingEcho": {
+      "post": {
+        "summary": "ServerStreamingEcho is server side streaming.",
+        "operationId": "Echo_ServerStreamingEcho",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/grpc.examples.echo.EchoResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/google.rpc.Status"
+                }
+              },
+              "title": "Stream result of grpc.examples.echo.EchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "EchoRequest is the request for echo.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/grpc.examples.echo.EchoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Echo"
+        ]
+      }
+    },
+    "/grpc.examples.echo.Echo/UnaryEcho": {
+      "post": {
+        "summary": "UnaryEcho is unary echo.",
+        "operationId": "Echo_UnaryEcho",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.examples.echo.EchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "EchoRequest is the request for echo.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/grpc.examples.echo.EchoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Echo"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "google.rpc.Status": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    },
+    "grpc.examples.echo.EchoRequest": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "description": "EchoRequest is the request for echo."
+    },
+    "grpc.examples.echo.EchoResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "description": "EchoResponse is the response for echo."
+    }
+  }
+}

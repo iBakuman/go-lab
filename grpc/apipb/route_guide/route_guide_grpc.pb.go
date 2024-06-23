@@ -16,7 +16,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.2
-// source: examples/route_guide/routeguide/route_guide.proto
+// source: route_guide/route_guide.proto
 
 package routeguide
 
@@ -364,5 +364,5 @@ var RouteGuide_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "examples/route_guide/routeguide/route_guide.proto",
+	Metadata: "route_guide/route_guide.proto",
 }

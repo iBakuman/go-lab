@@ -19,7 +19,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.2
-// source: examples/features/proto/echo/echo.proto
+// source: echo/echo.proto
 
 package echo
 
@@ -335,5 +335,5 @@ var Echo_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "examples/features/proto/echo/echo.proto",
+	Metadata: "echo/echo.proto",
 }

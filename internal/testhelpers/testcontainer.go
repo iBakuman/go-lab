@@ -24,7 +24,7 @@ var (
 	PostgresImage = "postgres:16-alpine"
 )
 
-func SetupPostgresContainer(t *testing.T) (func() error, string) {
+func SetupPostgresContainer(t testing.TB) (func() error, string) {
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
 		Image:        PostgresImage,
@@ -54,8 +54,9 @@ func SetupPostgresContainer(t *testing.T) (func() error, string) {
 	return teardown, dsn
 }
 
-func SetupPostgresWithGorm(t *testing.T) (*gorm.DB, func() error) {
+func SetupPostgresWithGorm(t testing.TB) (*gorm.DB, func() error) {
 	teardown, dsn := SetupPostgresContainer(t)
+	time.Sleep(5 * time.Second)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	require.NoError(t, err)
 	sqlDB, err := db.DB()

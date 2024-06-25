@@ -1,6 +1,7 @@
 package gorm
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -28,6 +29,27 @@ type Animal struct {
 
 func (a *Animal) GetName() string {
 	return a.Name
+}
+
+func TestReflect(t *testing.T) {
+	t.Run("test reflect.TypeOf", func(t *testing.T) {
+		var a NameProvider
+		a = Person{}
+		typ := reflect.TypeOf(a)
+		require.Equal(t, "Person", typ.Name())
+
+		a = &Person{}
+		typ = reflect.TypeOf(a)
+		require.Empty(t, typ.Name())
+		typ = reflect.Indirect(reflect.ValueOf(a)).Type()
+		require.Equal(t, "Person", typ.Name())
+
+		a = &Animal{}
+		typ = reflect.TypeOf(a)
+		require.Empty(t, typ.Name())
+		typ = reflect.Indirect(reflect.ValueOf(a)).Type()
+		require.Equal(t, "Animal", typ.Name())
+	})
 }
 
 func TestCreate(t *testing.T) {
@@ -69,5 +91,16 @@ func TestCreate(t *testing.T) {
 		require.Panics(t, func() {
 			conn.First(&actual, "name = ?", "John")
 		})
+
+		typ1 := reflect.TypeOf(Person{})
+		value1 := reflect.New(typ1).Interface()
+		reflect.SliceOf(typ1)
+		typ := reflect.TypeOf([]*Person{})
+		value := reflect.New(typ).Interface()
+		require.NoError(t, conn.Model(value1).Find(value).Error)
+		allPerson := *value.(*[]*Person)
+		for _, person := range allPerson {
+			t.Logf("name: %v, age: %v\n", person.Name, person.Age)
+		}
 	})
 }

@@ -35,3 +35,11 @@ func TestInterfaceCopyValue(t *testing.T) {
 	a.(*Person).Name = "John"
 	require.Equal(t, "John", a.(*Person).Name)
 }
+
+func TestTypeAssert(t *testing.T) {
+	var a any
+	require.Equal(t, nil, a)
+	require.Panics(t, func() {
+		_ = a.(*Person)
+	})
+}

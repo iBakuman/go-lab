@@ -2,8 +2,11 @@ package cobra
 
 import (
 	"bytes"
+	"fmt"
+	"os"
 	"testing"
 
+	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -46,4 +49,20 @@ func TestChanged(t *testing.T) {
 	require.True(t, changed)
 	changed = flagSet.Changed("tls")
 	require.False(t, changed)
+}
+
+func TestVersion(t *testing.T) {
+	cmd := &cobra.Command{
+		Short: "test",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			fmt.Printf("args: %v\n", args)
+			return nil
+		},
+		Version: "v1.0.0",
+	}
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	os.Args = []string{"test", "--version"}
+	require.NoError(t, cmd.Execute())
+	require.Contains(t, buf.String(), "v1.0.0")
 }

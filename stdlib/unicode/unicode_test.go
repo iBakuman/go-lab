@@ -1,6 +1,7 @@
 package unicode
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"unicode"
@@ -70,4 +71,8 @@ func TestName(t *testing.T) {
 			t.Logf("%c is not japanese", ch)
 		}
 	}
+}
+
+func TestPrintUnicodePoint(t *testing.T) {
+	fmt.Printf("%x\n", 'ー')
 }

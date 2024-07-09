@@ -8,6 +8,7 @@ import (
 
 func TestGetName(t *testing.T) {
 	name := gimei.NewName()
+	t.Logf(name.Kanji())
 	t.Logf(name.First.Kanji())
 	t.Logf(name.First.Katakana())
 	t.Logf(name.Last.Kanji())

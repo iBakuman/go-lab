@@ -74,5 +74,5 @@ func TestName(t *testing.T) {
 }
 
 func TestPrintUnicodePoint(t *testing.T) {
-	fmt.Printf("%x\n", 'ー')
+	fmt.Printf("%c\n", '\u30A0')
 }

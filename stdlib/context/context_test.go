@@ -113,3 +113,13 @@ func TestValueWithEmptyContext(t *testing.T) {
 	i2 = d
 	require.False(t, i1 == i2)
 }
+
+func TestContext(t *testing.T) {
+	ctx := context.Background()
+	funA := func(ctx context.Context) {
+		ctx = context.WithValue(ctx, "funA", "funA")
+		require.NotNil(t, ctx.Value("funA"))
+	}
+	funA(ctx)
+	require.Nil(t, ctx.Value("funA"))
+}

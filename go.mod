@@ -6,6 +6,7 @@ require (
 	github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0
 	github.com/charmbracelet/bubbletea v0.26.6
 	github.com/cncf/xds/go v0.0.0-20240423153145-555b57ec207b
+	github.com/google/go-cmp v0.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
 	github.com/lib/pq v1.3.0
 	github.com/mattn/go-gimei v0.0.4

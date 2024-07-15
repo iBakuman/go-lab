@@ -42,3 +42,36 @@ func TestDefer2(t *testing.T) {
 		panic(err)
 	})
 }
+
+func TestDefer3(t *testing.T) {
+	// recover be called in 3rd defer
+	f1 := func() {
+		r := recover()
+		t.Logf("f2 is called, recover: %v", r)
+	}
+
+	f2 := func() {
+		t.Logf("f1 is called")
+		f1()
+	}
+
+	f3 := func() {
+		t.Logf("f3 is called")
+		defer f1()
+	}
+
+	require.Panics(t, func() {
+		defer f2()
+		panic("panic")
+	})
+
+	require.Panics(t, func() {
+		defer f3()
+		panic("panic")
+	})
+
+	require.NotPanics(t, func() {
+		defer f1()
+		panic("panic")
+	})
+}

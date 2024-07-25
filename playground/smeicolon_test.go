@@ -33,6 +33,17 @@ func FunC(t *testing.T, a int) (err error) {
 	return
 }
 
+func FunD(t *testing.T, reset bool) (err error) {
+	defer func() {
+		require.Error(t, err)
+		require.ErrorContains(t, err, "hello")
+		if reset {
+			err = nil
+		}
+	}()
+	return errors.New("hello")
+}
+
 func TestSemicolonFuncA(t *testing.T) {
 	a := 4
 	t.Logf("&a: %p", &a)
@@ -43,4 +54,9 @@ func TestSemicolonFuncA(t *testing.T) {
 
 func TestSemicolonFuncC(t *testing.T) {
 	require.NoError(t, FunC(t, 2))
+}
+
+func TestSemicolonFuncD(t *testing.T) {
+	require.Error(t, FunD(t, false))
+	require.NoError(t, FunD(t, true))
 }

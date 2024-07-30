@@ -30,16 +30,19 @@ func B(skip int) string {
 
 func TestCaller(t *testing.T) {
 	s1 := A(0)
+	t.Logf("s1:\n %s", s1)
 	require.Contains(t, s1, "runtime.Callers")
 	require.Contains(t, s1, "runtime.B")
 	require.Contains(t, s1, "runtime.A")
 
 	s2 := A(1)
+	t.Logf("s2:\n %s", s2)
 	require.NotContains(t, s2, "runtime.Callers")
 	require.Contains(t, s2, "runtime.B")
 	require.Contains(t, s2, "runtime.A")
 
 	s3 := A(2)
+	t.Logf("s3:\n %s", s3)
 	require.NotContains(t, s3, "runtime.B")
 	require.Contains(t, s3, "runtime.A")
 }

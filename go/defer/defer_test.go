@@ -1,7 +1,9 @@
 package _defer
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -47,11 +49,11 @@ func TestDefer3(t *testing.T) {
 	// recover be called in 3rd defer
 	f1 := func() {
 		r := recover()
-		t.Logf("f2 is called, recover: %v", r)
+		t.Logf("f1 is called, recover: %v", r)
 	}
 
 	f2 := func() {
-		t.Logf("f1 is called")
+		t.Logf("f2 is called")
 		f1()
 	}
 
@@ -74,4 +76,22 @@ func TestDefer3(t *testing.T) {
 		defer f1()
 		panic("panic")
 	})
+}
+
+func TestOrder(t *testing.T) {
+	buf := &bytes.Buffer{}
+	defer func() {
+		require.Equal(t, 2, buf.Len())
+		require.Equal(t, "BA", buf.String())
+	}()
+	defer func() {
+		n, err := fmt.Fprintf(buf, "A")
+		require.NoError(t, err)
+		require.Equal(t, 1, n)
+	}()
+	defer func() {
+		n, err := fmt.Fprintf(buf, "B")
+		require.NoError(t, err)
+		require.Equal(t, 1, n)
+	}()
 }

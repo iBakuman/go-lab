@@ -95,3 +95,22 @@ func TestOrder(t *testing.T) {
 		require.Equal(t, 1, n)
 	}()
 }
+
+func TestOrder2(t *testing.T) {
+	buf := &bytes.Buffer{}
+	defer func() {
+		require.Equal(t, 1, buf.Len())
+		require.Equal(t, "B", buf.String())
+	}()
+	defer func() {
+		n, err := fmt.Fprintf(buf, "B")
+		require.NoError(t, err)
+		require.Equal(t, 1, n)
+	}()
+	return
+	defer func() {
+		n, err := fmt.Fprintf(buf, "A")
+		require.NoError(t, err)
+		require.Equal(t, 1, n)
+	}()
+}

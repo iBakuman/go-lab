@@ -21,3 +21,19 @@ func TestNIl(t *testing.T) {
 	})
 	require.Equal(t, "value", m2["key"])
 }
+
+func TestCreate(t *testing.T) {
+	var m1 map[string]string
+	require.Nil(t, m1)
+	require.Empty(t, m1["key"])
+	require.Len(t, m1, 0)
+
+	m2 := map[string]string{}
+	require.NotNil(t, m2)
+	// we only access the key, so it should not create the key in the map
+	require.Empty(t, m2["key"])
+	require.Len(t, m2, 0)
+	m2["key"] = "value"
+	require.Equal(t, "value", m2["key"])
+	require.Len(t, m2, 1)
+}

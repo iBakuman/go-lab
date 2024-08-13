@@ -128,5 +128,12 @@ func TestOpOnChannel(t *testing.T) {
 			}
 			require.Equal(t, []int{0, 1, 2}, res)
 		})
+		t.Run("all closed channel are not equal", func(t *testing.T) {
+			ch1 := make(chan struct{})
+			close(ch1)
+			ch2 := make(chan struct{})
+			close(ch2)
+			require.NotEqual(t, ch1, ch2)
+		})
 	})
 }

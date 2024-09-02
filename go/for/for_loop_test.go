@@ -84,3 +84,63 @@ func TestTripleForLoop(t *testing.T) {
 		}
 	}
 }
+
+func TestRange(t *testing.T) {
+	type Animal struct {
+		name string
+		legs int
+	}
+
+	zoo := []Animal{
+		{"Dog", 4},
+		{"Chicken", 2},
+		{"Snail", 0},
+	}
+
+	fmt.Printf("-> Before update %v\n", zoo)
+
+	for _, animal := range zoo {
+		// 🚨 Oppps! `animal` is a copy of an element 😧
+		animal.legs = 999
+	}
+
+	fmt.Printf("\n-> After update %v\n", zoo)
+}
+
+// Ranging Over Nil: If you attempt to range over a nil slice, map, or channel,
+// the `for range` loop will not execute and will not result in a runtime panic.
+// However, ranging over a nil pointer to an array will result in a runtime panic.
+// Always check if a pointer to an array is nil before ranging over it.
+func TestRangeNilSlice(t *testing.T) {
+	var slice []int
+	for range slice {
+		require.Fail(t, "should not reach here")
+	}
+	var m map[int]int
+	for range m {
+		require.Fail(t, "should not reach here")
+	}
+	var ptrSlice = &[]int{}
+	for range *ptrSlice {
+		require.Fail(t, "should not reach here")
+	}
+
+	var ptrArray *[3]int
+	var cnt int
+	require.NotPanics(t, func() {
+		// we can range over a nil pointer to an array, but we cannot get the value.(only the index)
+		for idx := range ptrArray {
+			_ = idx
+			cnt++
+			// require.Equal(t, 0, v)
+		}
+	})
+	require.Equal(t, 3, cnt)
+	require.Panics(t, func() {
+		// if we attempt to range over a nil pointer to an array and get the value,
+		// it will result in a runtime panic.
+		for _, v := range *ptrArray {
+			_ = v
+		}
+	})
+}

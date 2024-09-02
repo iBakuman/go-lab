@@ -40,6 +40,16 @@ func TestCmp(t *testing.T) {
 	})
 }
 
+type B struct {
+	A    A
+	Type string
+}
+
+func TestCmpB(t *testing.T) {
+	a1 := GenA()
+	a2 := GenA()
+}
+
 func TestWhile(t *testing.T) {
 	for {
 		t.Logf("while loop")

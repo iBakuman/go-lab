@@ -70,7 +70,7 @@ func TestOpOnChannel(t *testing.T) {
 		})
 
 		t.Run("for-range on nil channel", func(t *testing.T) {
-			worker := func(message chan string) <-chan struct{} {
+			worker := func(message <-chan string) <-chan struct{} {
 				done := make(chan struct{})
 				go func() {
 					defer close(done)

@@ -66,3 +66,23 @@ func TestVersion(t *testing.T) {
 	require.NoError(t, cmd.Execute())
 	require.Contains(t, buf.String(), "v1.0.0")
 }
+
+func TestPersistentFlags(t *testing.T) {
+	parent := cobra.Command{
+		Use: "test",
+	}
+	child := cobra.Command{
+		Use: "child",
+		Run: func(cmd *cobra.Command, args []string) {
+			val, err := cmd.Flags().GetBool("verbose")
+			require.NoError(t, err)
+			require.True(t, val)
+		},
+	}
+	parent.PersistentFlags().Bool("verbose", false, "enable verbose mode")
+	parent.AddCommand(&child)
+	parent.SetArgs([]string{"--verbose", "child"})
+	require.NoError(t, parent.Execute())
+	parent.SetArgs([]string{"child", "--verbose"})
+	require.NoError(t, parent.Execute())
+}

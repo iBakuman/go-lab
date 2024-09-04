@@ -98,13 +98,14 @@ func TestRange(t *testing.T) {
 	}
 
 	fmt.Printf("-> Before update %v\n", zoo)
-
 	for _, animal := range zoo {
 		// 🚨 Oppps! `animal` is a copy of an element 😧
 		animal.legs = 999
 	}
-
 	fmt.Printf("\n-> After update %v\n", zoo)
+	for i := range zoo {
+		t.Logf("idx: %d, ptr: %p", i, &i)
+	}
 }
 
 // Ranging Over Nil: If you attempt to range over a nil slice, map, or channel,

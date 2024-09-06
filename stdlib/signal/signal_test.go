@@ -1,6 +1,7 @@
 package signal_test
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -49,7 +50,6 @@ func TestSendInterrupt(t *testing.T) {
 	}
 }
 
-// The following test will fail
 func TestSIGTERMDoesNotTriggerSIGINTHandler(t *testing.T) {
 	c := make(chan os.Signal, 1)
 	// Listen only for SIGINT (os.Interrupt)
@@ -102,3 +102,141 @@ func TestSendTerm(t *testing.T) {
 		t.Fatal("should receive signal")
 	}
 }
+
+// <editor-fold desc="Catching vs Ignoring Signals">
+// In Unix-like operating systems, signals are used to communicate with processes and control their behavior. When it
+// comes to handling signals, two common actions are catching and ignoring signals. Understanding the difference between
+// these two are crucial for designing robust applications.
+//
+// Difference Between Catching and Ignoring Signals
+//
+// 1. Catching a Signal:
+//
+// 1.1 Definition:
+//
+// Catching a signal means that a process sets up a specific handler function to execute when the signal is received.
+// The process can perform custom actions in response to the signal, such as logging a message, cleaning up resources,
+// or modifying its behavior.
+//
+// 1.2 How It Works:
+//
+// You use functions like signal.Notify in Go or signal()/sigaction() in C to specify a handler function for a
+// particular signal. When the signal is received, the specified handler function is executed instead of the default
+// action associated with the signal.
+//
+// 1.3 Use Cases:
+//
+// Catching signals is useful when you need to gracefully handle shutdowns (e.g., saving state before exiting, closing
+// files), handle interrupts (e.g., stopping ongoing tasks safely), or even handle user-defined behavior (e.g., custom
+// cleanup or logging).
+
+func TestCatchSignal(t *testing.T) {
+	t.Skip()
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt) // Catch SIGINT (Ctrl+C)
+	go func() {
+		sig := <-c
+		fmt.Println("Caught signal:", sig)
+		// Perform cleanup or other tasks
+	}()
+	// Simulate a long-running process
+	select {}
+}
+
+// 2. Ignoring a Signal:
+
+// 2.1 Definition:
+//
+// Ignoring a signal means that the process explicitly tells the system to do nothing when the signal is received. In
+// this case, the signal is completely disregarded, and no handler function is executed.
+//
+// 2.2 How It Works:
+//
+// You can set the signal handler to SIG_IGN (signal ignore) in languages like C, or use signal.Ignore in Go to specify
+// that a particular signal should be ignored. When the signal is ignored, it has no effect on the process, and the
+// default action for that signal is suppressed.
+//
+// 2.3 Use Cases: Ignoring signals is useful when a process should not be interrupted by certain signals. For instance,
+// a long-running computation might ignore SIGINT to prevent accidental termination by a user pressing Ctrl+C.
+// Similarly, ignoring SIGPIPE can prevent crashes in network applications when writing to a broken pipe.
+
+func TestIgnoreSignal(t *testing.T) {
+	signal.Ignore(os.Interrupt, syscall.SIGTERM) // Ignore SIGINT and SIGTERM
+	p, err := os.FindProcess(os.Getpid())
+	require.NoError(t, err)
+	require.NoError(t, p.Signal(os.Interrupt)) // This signal will be ignored
+	time.Sleep(20 * time.Millisecond)
+	t.Logf("Process not interrupted by SIGINT")
+}
+
+// 1. Action Taken:
+//
+// Catching: The signal triggers a specific action defined by the signal handler.
+// Ignoring: The signal has no effect; the process continues as if the signal was never sent.
+//
+// 2. Flexibility:
+//
+// Catching: Allows for custom behavior, providing a way to handle different signals in different ways. Ignoring: Simply
+// bypasses the signal without any action, which can be simpler but less flexible.
+//
+// 3. Use Cases:
+//
+// Catching: Used when the application needs to handle shutdown, cleanup, or user-defined behaviors gracefully.
+// Ignoring: Used when certain signals should not affect the process, preventing interruptions or unexpected behavior.
+//
+// By understanding the difference between catching and ignoring signals, developers can design applications that
+// respond appropriately to external events and signals, leading to more robust and predictable behavior.
+// #endregion
+
+// region What is default action for signals?
+// </editor-fold>
+
+// <editor-fold desc="Default Signal Actions">
+// In Unix-like operating systems, each signal has a default action that occurs when a process receives that signal, unless the process has set up a custom signal handler to catch or ignore it. The default action for a signal defines what the system will do if the signal is delivered to a process and no specific handling is defined by the process.
+//
+// Here are the common types of default actions for signals:
+//
+// Terminate: The process is terminated. This is a common default action for many signals. Termination usually means the process is stopped and the operating system reclaims its resources.
+//
+// Terminate and Dump Core: The process is terminated, and a core dump is created. A core dump is a file that captures the memory image of the process at the time of termination, which can be useful for debugging. This action helps developers diagnose the cause of the process termination.
+//
+// Ignore: The signal is ignored, and no action is taken. This means the process continues running as if the signal was never received.
+//
+// Stop: The process is stopped (paused) and can be resumed later. This action suspends the process's execution until it is explicitly continued.
+//
+// Continue: If the process is currently stopped, it is resumed. This action is used to restart a process that has been paused.
+//
+// Common Signals and Their Default Actions
+// Here's a list of some common signals and their default actions:
+//
+// SIGINT (2): Interrupt — Default action is to terminate the process. This signal is typically sent by pressing Ctrl+C in the terminal.
+//
+// SIGTERM (15): Terminate — Default action is to terminate the process. This is a generic termination signal and is often used to ask a process to gracefully shut down.
+//
+// SIGKILL (9): Kill — Default action is to terminate the process. This signal cannot be caught, blocked, or ignored, making it useful for forcibly terminating a process.
+//
+// SIGQUIT (3): Quit — Default action is to terminate the process and dump core. This signal is similar to SIGINT, but it also produces a core dump for debugging.
+//
+// SIGSEGV (11): Segmentation Violation — Default action is to terminate the process and dump core. This signal indicates a segmentation fault, which occurs when a program tries to access an invalid memory address.
+//
+// SIGILL (4): Illegal Instruction — Default action is to terminate the process and dump core. This signal indicates that the process has attempted to execute an illegal or undefined instruction.
+//
+// SIGABRT (6): Abort — Default action is to terminate the process and dump core. This signal is sent by the abort() function, usually to indicate a serious error in the program.
+//
+// SIGFPE (8): Floating Point Exception — Default action is to terminate the process and dump core. This signal is raised by arithmetic operations, such as division by zero or overflow.
+//
+// SIGPIPE (13): Broken Pipe — Default action is to terminate the process. This signal is sent when a process writes to a pipe that has no readers.
+//
+// SIGHUP (1): Hangup — Default action is to terminate the process. This signal is sent to a process when its controlling terminal is closed.
+//
+// SIGSTOP (19): Stop — Default action is to stop the process. This signal cannot be caught or ignored, and it pauses the process execution.
+//
+// SIGCONT (18): Continue — Default action is to continue a stopped process. This signal resumes a process that has been paused by SIGSTOP or SIGTSTP.
+//
+// SIGCHLD (17): Child Status Changed — Default action is to ignore. This signal is sent to a parent process when a child process stops or terminates.
+//
+// Summary
+// Default actions provide a system-defined response to signals, ensuring that processes behave predictably even if no custom signal handlers are defined.
+// Processes can override the default action by catching signals or ignoring them, except for a few signals (SIGKILL and SIGSTOP) that have fixed behaviors.
+// Understanding the default actions of signals is crucial for writing robust programs that handle signals appropriately, allowing processes to manage shutdowns, interruptions, and errors gracefully.
+// </editor-fold>

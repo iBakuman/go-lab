@@ -82,7 +82,23 @@ func TestPersistentFlags(t *testing.T) {
 	parent.PersistentFlags().Bool("verbose", false, "enable verbose mode")
 	parent.AddCommand(&child)
 	parent.SetArgs([]string{"--verbose", "child"})
+
+	// Test that the parent flags registered through the persistent flags are available in the child command
+	_, err := child.Flags().GetBool("non-existent ")
+	require.Error(t, err)
+	// before parent.Execute() is called, the child command cannot access the parent persistent flags
+	_, err = child.Flags().GetBool("verbose")
+	require.Error(t, err)
+
 	require.NoError(t, parent.Execute())
+
+	_, err = child.Flags().GetBool("non-existent ")
+	require.Error(t, err)
+	// after parent.Execute() is called, the child command can access the parent persistent flags
+	gotBool, err := child.Flags().GetBool("verbose")
+	require.True(t,gotBool)
+	require.NoError(t, err)
+
 	parent.SetArgs([]string{"child", "--verbose"})
 	require.NoError(t, parent.Execute())
 }

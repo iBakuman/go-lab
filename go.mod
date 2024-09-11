@@ -4,12 +4,16 @@ go 1.22
 
 require (
 	github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0
+	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/charmbracelet/bubbletea v0.26.6
 	github.com/cncf/xds/go v0.0.0-20240423153145-555b57ec207b
 	github.com/google/go-cmp v0.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/lib/pq v1.3.0
 	github.com/mattn/go-gimei v0.0.4
+	github.com/ory/graceful v0.1.3
+	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
@@ -26,6 +30,7 @@ require (
 	google.golang.org/grpc v1.64.0
 	google.golang.org/grpc/examples v0.0.0-20240621202332-c8568c99b8c5
 	google.golang.org/protobuf v1.34.1
+	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
 )
@@ -37,7 +42,6 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Microsoft/hcsshim v0.11.4 // indirect
-	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/charmbracelet/x/ansi v0.1.2 // indirect
@@ -62,7 +66,6 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
@@ -84,8 +87,6 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
-	github.com/ory/graceful v0.1.3 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
@@ -109,6 +110,5 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240604185151-ef581f913117 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

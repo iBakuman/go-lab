@@ -11,18 +11,63 @@ import (
 )
 
 func TestTypeOf(t *testing.T) {
-	timeType := reflect.TypeOf(time.Time{})
-	var a interface{}
-	require.True(t, reflect.TypeOf(a) == nil)
-	a = time.Now()
-	require.True(t, reflect.TypeOf(a) == timeType)
-	require.True(t, reflect.TypeOf(a.(time.Time)) == timeType)
-	var b interface{} = a
-	require.True(t, reflect.TypeOf(b) == timeType)
-	require.True(t, reflect.TypeOf(b.(time.Time)) == timeType)
-	type myInterface interface{}
-	var c myInterface
-	require.True(t, reflect.TypeOf(c).Kind() == reflect.Interface)
+
+	t.Run("get type of a variable", func(t *testing.T) {
+		// get the type of time.Time
+		timeType := reflect.TypeOf(time.Time{})
+		// also works, and is more efficient, because it doesn't create a new instance of time.Time
+		timeType = reflect.TypeOf((*time.Time)(nil)).Elem()
+
+		var a interface{}
+		// before assigning a value to a, its type is nil
+		require.True(t, reflect.TypeOf(a) == nil)
+		a = time.Now()
+		// after assigning a value to a, its type is time.Time
+		require.True(t, reflect.TypeOf(a) == timeType)
+		// a is a time.Time, so this type assertion will not panic
+		require.True(t, reflect.TypeOf(a.(time.Time)) == timeType)
+
+	})
+
+	t.Run("empty interface", func(t *testing.T) {
+		// myInterface is an empty interface, which can hold values of any type.
+		// reflect.TypeOf returns the dynamic type of the interface value c.
+		type myInterface interface{}
+		var c myInterface
+		require.True(t, reflect.TypeOf(c) == nil)
+		require.Panics(t, func() {
+			// reflect.TypeOf(nil) will panic.
+			reflect.TypeOf(c).Kind()
+		})
+		c = 0
+		// this call will not panic
+		require.True(t, reflect.TypeOf(c).Kind() == reflect.Int)
+	})
+
+	t.Run("pointer to interface", func(t *testing.T) {
+		type ifaceA interface {
+			foo()
+		}
+		type ifaceB interface {
+			foo()
+		}
+		var pA *ifaceA
+		var pB *ifaceB
+		require.True(t, pA == nil)
+		require.True(t, pB == nil)
+		// compile error: cannot compare pA and pB because they are of different types
+		// require.True(t, pA != pB)
+		// even though pA and pB are both nil, their types are both non-nil
+		// because they are pointers to interfaces, not interfaces.
+		require.True(t, reflect.TypeOf(pA) != nil)
+		require.True(t, reflect.TypeOf(pB) != nil)
+
+		var pA2 ifaceA
+		var pB2 ifaceB
+		// pA2 and pB2 are both nil, and their types are nil as well.
+		require.True(t, reflect.TypeOf(pA2) == nil)
+		require.True(t, reflect.TypeOf(pB2) == nil)
+	})
 }
 
 type Person struct {

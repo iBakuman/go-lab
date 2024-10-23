@@ -11,7 +11,6 @@ import (
 )
 
 func TestTypeOf(t *testing.T) {
-
 	t.Run("get type of a variable", func(t *testing.T) {
 		// get the type of time.Time
 		timeType := reflect.TypeOf(time.Time{})
@@ -27,6 +26,17 @@ func TestTypeOf(t *testing.T) {
 		// a is a time.Time, so this type assertion will not panic
 		require.True(t, reflect.TypeOf(a.(time.Time)) == timeType)
 
+		type sA struct{
+			name string
+		}
+		var psA *sA
+		a = psA
+		require.True(t, reflect.TypeOf(a) == reflect.TypeOf((*sA)(nil)))
+		// even though a is nil, reflect.TypeOf(a) is not nil.
+		require.True(t, reflect.TypeOf(a) != nil)
+		var vSA sA
+		a = vSA
+		require.True(t, reflect.TypeOf(a) == reflect.TypeOf(sA{}))
 	})
 
 	t.Run("empty interface", func(t *testing.T) {

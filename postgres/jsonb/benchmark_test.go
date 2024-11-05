@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/ibakuman/go-lab/internal/testhelpers"
+	"github.com/ibakuman/go-lab/utils/jsonb"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
-	"go-lab/internal/testhelpers"
-	"go-lab/utils/jsonb"
 	"gorm.io/gorm"
 )
 

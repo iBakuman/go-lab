@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ibakuman/go-lab/utils"
 	"github.com/stretchr/testify/assert"
-	"go-lab/utils"
 )
 
 const (

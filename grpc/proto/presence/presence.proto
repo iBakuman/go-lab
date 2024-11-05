@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package presence;
+
+option go_package = "github.com/ibakuman/go-lab/grpc/gen/presence";
+
+message MessageA {
+    string a = 1;
+}
+
+message MessageB {
+    int32 a = 1;
+    MessageA b = 2;
+    optional int32 c = 3;
+}
+
+message MessageC {
+    oneof resp {
+        MessageA a = 1;
+        MessageB b = 2;
+    }
+}

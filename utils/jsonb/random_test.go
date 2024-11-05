@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/ibakuman/go-lab/utils"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
-	"go-lab/utils"
 )
 
 func TestGenRandomJson(t *testing.T) {

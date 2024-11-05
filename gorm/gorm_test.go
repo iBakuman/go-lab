@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/ibakuman/go-lab/internal/testhelpers"
 	"github.com/stretchr/testify/require"
-	"go-lab/internal/testhelpers"
 	"gorm.io/gorm/logger"
 )
 

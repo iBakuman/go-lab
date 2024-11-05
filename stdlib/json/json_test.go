@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/ibakuman/go-lab/utils/jsonb"
 	"github.com/stretchr/testify/require"
-	"go-lab/utils/jsonb"
 )
 
 func TestDecoder(t *testing.T) {

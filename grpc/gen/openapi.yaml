@@ -3,19 +3,49 @@
 
 openapi: 3.0.3
 info:
-    title: TestGateway API
+    title: TestGatewayService API
     version: 0.0.1
 paths:
     /v1/test:
+        get:
+            tags:
+                - TestGatewayService
+            description: |-
+                compile error: Failure: plugin "buf.build/grpc-ecosystem/openapiv2:v2.22.0"
+                 failed: no field "message" found in EchoRequest
+                 rpc EchoMisMatchPathParams (EchoRequest) returns (EchoResponse) {
+                     option (google.api.http) = {
+                         post: "/v1/test/{message}"
+                     };
+                 }
+            operationId: TestGatewayService_EchoQueryParams
+            parameters:
+                - name: msg
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EchoResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
-                - TestGateway
-            operationId: TestGateway_Test
+                - TestGatewayService
+            operationId: TestGatewayService_Echo
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/TestRequest'
+                            $ref: '#/components/schemas/EchoRequest'
                 required: true
             responses:
                 "200":
@@ -23,7 +53,31 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/TestResponse'
+                                $ref: '#/components/schemas/EchoResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/test/{msg}:
+        get:
+            tags:
+                - TestGatewayService
+            operationId: TestGatewayService_EchoPathParams
+            parameters:
+                - name: msg
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EchoResponse'
                 default:
                     description: Default error response
                     content:
@@ -32,6 +86,16 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        EchoRequest:
+            type: object
+            properties:
+                msg:
+                    type: string
+        EchoResponse:
+            type: object
+            properties:
+                msg:
+                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -56,15 +120,5 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        TestRequest:
-            type: object
-            properties:
-                msg:
-                    type: string
-        TestResponse:
-            type: object
-            properties:
-                msg:
-                    type: string
 tags:
-    - name: TestGateway
+    - name: TestGatewayService

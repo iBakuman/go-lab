@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "TestGateway"
+      "name": "TestGatewayService"
     }
   ],
   "consumes": [
@@ -17,13 +17,42 @@
   ],
   "paths": {
     "/v1/test": {
-      "post": {
-        "operationId": "TestGateway_Test",
+      "get": {
+        "summary": "compile error: Failure: plugin \"buf.build/grpc-ecosystem/openapiv2:v2.22.0\"\nfailed: no field \"message\" found in EchoRequest\nrpc EchoMisMatchPathParams (EchoRequest) returns (EchoResponse) {\n    option (google.api.http) = {\n        post: \"/v1/test/{message}\"\n    };\n}",
+        "operationId": "TestGatewayService_EchoQueryParams",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/gatewayTestResponse"
+              "$ref": "#/definitions/gatewayEchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "msg",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestGatewayService"
+        ]
+      },
+      "post": {
+        "operationId": "TestGatewayService_Echo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/gatewayEchoResponse"
             }
           },
           "default": {
@@ -39,18 +68,48 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/gatewayTestRequest"
+              "$ref": "#/definitions/gatewayEchoRequest"
             }
           }
         ],
         "tags": [
-          "TestGateway"
+          "TestGatewayService"
+        ]
+      }
+    },
+    "/v1/test/{msg}": {
+      "get": {
+        "operationId": "TestGatewayService_EchoPathParams",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/gatewayEchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "msg",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestGatewayService"
         ]
       }
     }
   },
   "definitions": {
-    "gatewayTestRequest": {
+    "gatewayEchoRequest": {
       "type": "object",
       "properties": {
         "msg": {
@@ -58,7 +117,7 @@
         }
       }
     },
-    "gatewayTestResponse": {
+    "gatewayEchoResponse": {
       "type": "object",
       "properties": {
         "msg": {

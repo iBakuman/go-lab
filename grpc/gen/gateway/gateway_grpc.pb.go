@@ -19,101 +19,193 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	TestGateway_Test_FullMethodName = "/gateway.TestGateway/Test"
+	TestGatewayService_Echo_FullMethodName            = "/gateway.TestGatewayService/Echo"
+	TestGatewayService_EchoPathParams_FullMethodName  = "/gateway.TestGatewayService/EchoPathParams"
+	TestGatewayService_EchoQueryParams_FullMethodName = "/gateway.TestGatewayService/EchoQueryParams"
 )
 
-// TestGatewayClient is the client API for TestGateway service.
+// TestGatewayServiceClient is the client API for TestGatewayService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TestGatewayClient interface {
-	Test(ctx context.Context, in *TestRequest, opts ...grpc.CallOption) (*TestResponse, error)
+type TestGatewayServiceClient interface {
+	Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
+	EchoPathParams(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
+	// compile error: Failure: plugin "buf.build/grpc-ecosystem/openapiv2:v2.22.0"
+	// failed: no field "message" found in EchoRequest
+	//
+	//	rpc EchoMisMatchPathParams (EchoRequest) returns (EchoResponse) {
+	//	    option (google.api.http) = {
+	//	        post: "/v1/test/{message}"
+	//	    };
+	//	}
+	EchoQueryParams(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
 }
 
-type testGatewayClient struct {
+type testGatewayServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewTestGatewayClient(cc grpc.ClientConnInterface) TestGatewayClient {
-	return &testGatewayClient{cc}
+func NewTestGatewayServiceClient(cc grpc.ClientConnInterface) TestGatewayServiceClient {
+	return &testGatewayServiceClient{cc}
 }
 
-func (c *testGatewayClient) Test(ctx context.Context, in *TestRequest, opts ...grpc.CallOption) (*TestResponse, error) {
+func (c *testGatewayServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TestResponse)
-	err := c.cc.Invoke(ctx, TestGateway_Test_FullMethodName, in, out, cOpts...)
+	out := new(EchoResponse)
+	err := c.cc.Invoke(ctx, TestGatewayService_Echo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// TestGatewayServer is the server API for TestGateway service.
-// All implementations must embed UnimplementedTestGatewayServer
-// for forward compatibility.
-type TestGatewayServer interface {
-	Test(context.Context, *TestRequest) (*TestResponse, error)
-	mustEmbedUnimplementedTestGatewayServer()
+func (c *testGatewayServiceClient) EchoPathParams(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EchoResponse)
+	err := c.cc.Invoke(ctx, TestGatewayService_EchoPathParams_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-// UnimplementedTestGatewayServer must be embedded to have
+func (c *testGatewayServiceClient) EchoQueryParams(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EchoResponse)
+	err := c.cc.Invoke(ctx, TestGatewayService_EchoQueryParams_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TestGatewayServiceServer is the server API for TestGatewayService service.
+// All implementations must embed UnimplementedTestGatewayServiceServer
+// for forward compatibility.
+type TestGatewayServiceServer interface {
+	Echo(context.Context, *EchoRequest) (*EchoResponse, error)
+	EchoPathParams(context.Context, *EchoRequest) (*EchoResponse, error)
+	// compile error: Failure: plugin "buf.build/grpc-ecosystem/openapiv2:v2.22.0"
+	// failed: no field "message" found in EchoRequest
+	//
+	//	rpc EchoMisMatchPathParams (EchoRequest) returns (EchoResponse) {
+	//	    option (google.api.http) = {
+	//	        post: "/v1/test/{message}"
+	//	    };
+	//	}
+	EchoQueryParams(context.Context, *EchoRequest) (*EchoResponse, error)
+	mustEmbedUnimplementedTestGatewayServiceServer()
+}
+
+// UnimplementedTestGatewayServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedTestGatewayServer struct{}
+type UnimplementedTestGatewayServiceServer struct{}
 
-func (UnimplementedTestGatewayServer) Test(context.Context, *TestRequest) (*TestResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Test not implemented")
+func (UnimplementedTestGatewayServiceServer) Echo(context.Context, *EchoRequest) (*EchoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
 }
-func (UnimplementedTestGatewayServer) mustEmbedUnimplementedTestGatewayServer() {}
-func (UnimplementedTestGatewayServer) testEmbeddedByValue()                     {}
+func (UnimplementedTestGatewayServiceServer) EchoPathParams(context.Context, *EchoRequest) (*EchoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EchoPathParams not implemented")
+}
+func (UnimplementedTestGatewayServiceServer) EchoQueryParams(context.Context, *EchoRequest) (*EchoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EchoQueryParams not implemented")
+}
+func (UnimplementedTestGatewayServiceServer) mustEmbedUnimplementedTestGatewayServiceServer() {}
+func (UnimplementedTestGatewayServiceServer) testEmbeddedByValue()                            {}
 
-// UnsafeTestGatewayServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TestGatewayServer will
+// UnsafeTestGatewayServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TestGatewayServiceServer will
 // result in compilation errors.
-type UnsafeTestGatewayServer interface {
-	mustEmbedUnimplementedTestGatewayServer()
+type UnsafeTestGatewayServiceServer interface {
+	mustEmbedUnimplementedTestGatewayServiceServer()
 }
 
-func RegisterTestGatewayServer(s grpc.ServiceRegistrar, srv TestGatewayServer) {
-	// If the following call pancis, it indicates UnimplementedTestGatewayServer was
+func RegisterTestGatewayServiceServer(s grpc.ServiceRegistrar, srv TestGatewayServiceServer) {
+	// If the following call pancis, it indicates UnimplementedTestGatewayServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&TestGateway_ServiceDesc, srv)
+	s.RegisterService(&TestGatewayService_ServiceDesc, srv)
 }
 
-func _TestGateway_Test_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TestRequest)
+func _TestGatewayService_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EchoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestGatewayServer).Test(ctx, in)
+		return srv.(TestGatewayServiceServer).Echo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestGateway_Test_FullMethodName,
+		FullMethod: TestGatewayService_Echo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestGatewayServer).Test(ctx, req.(*TestRequest))
+		return srv.(TestGatewayServiceServer).Echo(ctx, req.(*EchoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// TestGateway_ServiceDesc is the grpc.ServiceDesc for TestGateway service.
+func _TestGatewayService_EchoPathParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EchoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestGatewayServiceServer).EchoPathParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestGatewayService_EchoPathParams_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestGatewayServiceServer).EchoPathParams(ctx, req.(*EchoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestGatewayService_EchoQueryParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EchoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestGatewayServiceServer).EchoQueryParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestGatewayService_EchoQueryParams_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestGatewayServiceServer).EchoQueryParams(ctx, req.(*EchoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TestGatewayService_ServiceDesc is the grpc.ServiceDesc for TestGatewayService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var TestGateway_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "gateway.TestGateway",
-	HandlerType: (*TestGatewayServer)(nil),
+var TestGatewayService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "gateway.TestGatewayService",
+	HandlerType: (*TestGatewayServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Test",
-			Handler:    _TestGateway_Test_Handler,
+			MethodName: "Echo",
+			Handler:    _TestGatewayService_Echo_Handler,
+		},
+		{
+			MethodName: "EchoPathParams",
+			Handler:    _TestGatewayService_EchoPathParams_Handler,
+		},
+		{
+			MethodName: "EchoQueryParams",
+			Handler:    _TestGatewayService_EchoQueryParams_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

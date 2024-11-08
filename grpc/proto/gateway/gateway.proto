@@ -6,19 +6,36 @@ import "google/api/annotations.proto";
 
 option go_package = "github.com/ibakuman/go-lab/grpc/gen/gateway";
 
-service TestGateway {
-    rpc Test (TestRequest) returns (TestResponse) {
+service TestGatewayService {
+    rpc Echo (EchoRequest) returns (EchoResponse) {
         option (google.api.http) = {
             post: "/v1/test"
             body: "*"
         };
     }
+    rpc EchoPathParams (EchoRequest) returns (EchoResponse) {
+        option (google.api.http) = {
+            get: "/v1/test/{msg}"
+        };
+    }
+    // compile error: Failure: plugin "buf.build/grpc-ecosystem/openapiv2:v2.22.0"
+    // failed: no field "message" found in EchoRequest
+    // rpc EchoMisMatchPathParams (EchoRequest) returns (EchoResponse) {
+    //     option (google.api.http) = {
+    //         post: "/v1/test/{message}"
+    //     };
+    // }
+    rpc EchoQueryParams (EchoRequest) returns (EchoResponse) {
+        option (google.api.http) = {
+            get: "/v1/test"
+        };
+    }
 }
 
-message TestRequest {
+message EchoRequest {
     string msg = 1;
 }
 
-message TestResponse {
+message EchoResponse {
     string msg = 1;
 }

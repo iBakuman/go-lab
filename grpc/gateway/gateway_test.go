@@ -41,44 +41,44 @@ func (s *testImpl) EchoQueryParams(ctx context.Context, req *gateway.EchoRequest
 		Msg: fmt.Sprintf("EchoQueryParams: %s", req.Msg),
 	}, nil
 }
-
-func startGRPCServer(t *testing.T) *bufconn.Listener {
+func setupGRPCGatewayTestEnv(t *testing.T,
+	grpcRegister func(*grpc.Server),
+	gatewayRegister func(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error,
+) (*grpc.ClientConn, *httptest.Server) {
 	// 101024 * 1024 = 10 MB
-	listener := bufconn.Listen(101024 * 1024)
-	server := grpc.NewServer()
-	gateway.RegisterTestGatewayServiceServer(server, &testImpl{})
+	lis := bufconn.Listen(101024 * 1024)
+	grpcServer := grpc.NewServer()
+	grpcRegister(grpcServer)
 	go func() {
-		err := server.Serve(listener)
+		err := grpcServer.Serve(lis)
 		if err != nil {
-			require.ErrorContains(t, err, "closed")
+			require.ErrorContainsf(t, err, "closed", "unexpected error: %v occurred", err)
 		}
 	}()
 	t.Cleanup(func() {
-		server.GracefulStop()
-		require.NoError(t, listener.Close())
+		grpcServer.GracefulStop()
+		require.NoError(t, lis.Close())
 	})
-	return listener
-}
-
-var httpServerAddr = "localhost:19282"
-
-func startHTTPServer(t *testing.T, listener *bufconn.Listener) *httptest.Server {
-	// target must be 'bufnet'
-	conn, err := grpc.NewClient("bufnet", grpc.WithContextDialer(func(ctx context.Context, s string) (net.Conn, error) {
-		return listener.DialContext(ctx)
-	}), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// the first argument passed to grpc.NewClient must be "bufnet"
+	conn, err := grpc.NewClient("bufnet",
+		grpc.WithContextDialer(func(ctx context.Context, s string) (net.Conn, error) {
+			return lis.DialContext(ctx)
+		}),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	require.NoError(t, err)
 	mux := runtime.NewServeMux()
-	require.NoError(t, gateway.RegisterTestGatewayServiceHandler(context.Background(), mux, conn))
-	server := httptest.NewServer(mux)
-	server.URL = strings.Replace(server.URL, "127.0.0.1", "localhost", -1)
-	t.Cleanup(server.Close)
-	return server
+	require.NoError(t, gatewayRegister(context.Background(), mux, conn))
+	httpServer := httptest.NewServer(mux)
+	httpServer.URL = strings.Replace(httpServer.URL, "127.0.0.1", "localhost", -1)
+	t.Cleanup(httpServer.Close)
+	return conn, httpServer
 }
 
 func TestGateway(t *testing.T) {
-	lis := startGRPCServer(t)
-	server := startHTTPServer(t, lis)
+	_, server := setupGRPCGatewayTestEnv(t, func(server *grpc.Server) {
+		gateway.RegisterTestGatewayServiceServer(server, &testImpl{})
+	}, gateway.RegisterTestGatewayServiceHandler)
 
 	t.Run("request body", func(t *testing.T) {
 		type RequestPayload struct {

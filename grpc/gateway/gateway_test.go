@@ -45,8 +45,8 @@ func setupGRPCGatewayTestEnv(t *testing.T,
 	grpcRegister func(*grpc.Server),
 	gatewayRegister func(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error,
 ) (*grpc.ClientConn, *httptest.Server) {
-	// 101024 * 1024 = 10 MB
-	lis := bufconn.Listen(101024 * 1024)
+	// 10240 * 1024 = 10 MB
+	lis := bufconn.Listen(10240 * 1024)
 	grpcServer := grpc.NewServer()
 	grpcRegister(grpcServer)
 	go func() {
@@ -81,10 +81,7 @@ func TestGateway(t *testing.T) {
 	}, gateway.RegisterTestGatewayServiceHandler)
 
 	t.Run("request body", func(t *testing.T) {
-		type RequestPayload struct {
-			Msg string `json:"msg"`
-		}
-		payload := &RequestPayload{
+		payload := gateway.EchoRequest{
 			Msg: "hello",
 		}
 		data, err := json.Marshal(payload)

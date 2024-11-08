@@ -1,0 +1,15 @@
+# For details on buf.yaml configuration, visit https://buf.build/docs/configuration/v2/buf-yaml
+version: v2
+modules:
+  - path: proto
+
+deps:
+  - buf.build/googleapis/googleapis:f52d4f76a8434cc5966798b1d3b4f110
+
+lint:
+  use:
+    - STANDARD
+
+breaking:
+  use:
+    - FILE

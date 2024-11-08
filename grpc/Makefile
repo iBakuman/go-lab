@@ -14,3 +14,8 @@ build-image:
 compile: build-image
 	@printf $(COLOR) "Compile proto files..."
 	@cat .docker/gen.sh | docker run -i --rm -v $(PWD):/root/app -e SRC_ROOT=/root/app protoc:1.0 sh -s
+
+.PHONY: compile-with-buf
+compile-with-buf:
+	@buf dep update
+	@buf generate

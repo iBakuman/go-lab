@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package gateway;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/ibakuman/go-lab/grpc/gen/gateway";
+
+service TestGateway {
+    rpc Test (TestRequest) returns (TestResponse) {
+        option (google.api.http) = {
+            post: "/v1/test"
+            body: "*"
+        };
+    }
+}
+
+message TestRequest {
+    string msg = 1;
+}
+
+message TestResponse {
+    string msg = 1;
+}

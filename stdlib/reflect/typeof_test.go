@@ -26,7 +26,7 @@ func TestTypeOf(t *testing.T) {
 		// a is a time.Time, so this type assertion will not panic
 		require.True(t, reflect.TypeOf(a.(time.Time)) == timeType)
 
-		type sA struct{
+		type sA struct {
 			name string
 		}
 		var psA *sA
@@ -46,7 +46,7 @@ func TestTypeOf(t *testing.T) {
 		var c myInterface
 		require.True(t, reflect.TypeOf(c) == nil)
 		require.Panics(t, func() {
-			// reflect.TypeOf(nil) will panic.
+			// !important: this will panic because c is nil
 			reflect.TypeOf(c).Kind()
 		})
 		c = 0
@@ -68,13 +68,13 @@ func TestTypeOf(t *testing.T) {
 		// compile error: cannot compare pA and pB because they are of different types
 		// require.True(t, pA != pB)
 		// even though pA and pB are both nil, their types are both non-nil
-		// because they are pointers to interfaces, not interfaces.
+		// because they are pointers to interfaces rather than interfaces themselves.
 		require.True(t, reflect.TypeOf(pA) != nil)
 		require.True(t, reflect.TypeOf(pB) != nil)
 
 		var pA2 ifaceA
 		var pB2 ifaceB
-		// pA2 and pB2 are both nil, and their types are nil as well.
+		// pA2 and pB2 are both nil even if three are not methods defined in the interfaces.
 		require.True(t, reflect.TypeOf(pA2) == nil)
 		require.True(t, reflect.TypeOf(pB2) == nil)
 	})

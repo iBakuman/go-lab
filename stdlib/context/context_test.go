@@ -1,6 +1,7 @@
 package context
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -41,6 +42,7 @@ func TestValue(t *testing.T) {
 		require.Panics(t, func() {
 			_ = ctx.Value("non-exist").(*person)
 		})
+		// if the key is not exist, the value will be nil
 		v, ok := ctx.Value("non-exist").(*person)
 		require.Nil(t, v)
 		require.False(t, ok)
@@ -61,7 +63,11 @@ func TestValue(t *testing.T) {
 	t.Run("stored in contextKey, retrieved with int", func(t *testing.T) {
 		ctx := context.Background()
 		ctx = newContext(ctx, key1, &person{Name: "Alice", Age: 20}, false)
+		// type contextKey not eqaul to int, so the value will be nil
 		require.Nil(t, fromContext(ctx, key1, true))
+		require.Equal(t, "contextKey", reflect.TypeOf(key1).Name())
+		require.Equal(t, "int", reflect.TypeOf(int(key1)).Name())
+		require.Equal(t, "int", reflect.ValueOf(key1).Type().Name())
 	})
 
 	t.Run("stored in int, retrieved with contextKey", func(t *testing.T) {

@@ -30,13 +30,15 @@ func TestTypeOf(t *testing.T) {
 			name string
 		}
 		var psA *sA
-		a = psA
-		require.True(t, reflect.TypeOf(a) == reflect.TypeOf((*sA)(nil)))
-		// even though a is nil, reflect.TypeOf(a) is not nil.
-		require.True(t, reflect.TypeOf(a) != nil)
+		var b interface{}
+		b = psA
+		require.True(t, b != nil)
+		require.True(t, reflect.TypeOf(b) == reflect.TypeOf((*sA)(nil)))
+		// even though psA is nil, reflect.TypeOf(a) is not nil.
+		require.True(t, reflect.TypeOf(b) != nil)
 		var vSA sA
-		a = vSA
-		require.True(t, reflect.TypeOf(a) == reflect.TypeOf(sA{}))
+		b = vSA
+		require.True(t, reflect.TypeOf(b) == reflect.TypeOf(sA{}))
 	})
 
 	t.Run("empty interface", func(t *testing.T) {
@@ -46,12 +48,21 @@ func TestTypeOf(t *testing.T) {
 		var c myInterface
 		require.True(t, reflect.TypeOf(c) == nil)
 		require.Panics(t, func() {
-			// !important: this will panic because c is nil
+			// ⚠️Attention⚠️: this will panic because c is nil
 			reflect.TypeOf(c).Kind()
 		})
 		c = 0
 		// this call will not panic
 		require.True(t, reflect.TypeOf(c).Kind() == reflect.Int)
+	})
+
+	t.Run("non-empty interface", func(t *testing.T) {
+		type myInterface interface {
+			foo()
+		}
+		var c myInterface
+		// ⚠️Attention⚠️: even though myInterface has a method foo, c is nil.
+		require.True(t, reflect.TypeOf(c) == nil)
 	})
 
 	t.Run("pointer to interface", func(t *testing.T) {

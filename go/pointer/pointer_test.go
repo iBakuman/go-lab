@@ -29,7 +29,11 @@ func TestDoublePointer(t *testing.T) {
 
 func TestTriplePointer(t *testing.T) {
 	funcA := func(i ***int) {
-		***i = 10
+		//***i = 10
+		a := 1
+		b := &a
+		c := &b
+		*i = c
 	}
 	i := 20
 	b := &i

@@ -2,6 +2,7 @@ package reflect
 
 import (
 	"fmt"
+	"io"
 	"reflect"
 	"runtime"
 	"testing"
@@ -9,6 +10,18 @@ import (
 
 	"github.com/stretchr/testify/require"
 )
+
+type Printer interface{
+	Print() string
+}
+
+type PrinterImpl struct{
+	msg string
+}
+
+func (p PrinterImpl) Print() string {
+	return p.msg
+}
 
 func TestTypeOf(t *testing.T) {
 	t.Run("get type of a variable", func(t *testing.T) {
@@ -34,6 +47,7 @@ func TestTypeOf(t *testing.T) {
 		b = psA
 		require.True(t, b != nil)
 		require.True(t, reflect.TypeOf(b) == reflect.TypeOf((*sA)(nil)))
+		require.True(t, reflect.TypeOf(b).Elem() == reflect.TypeOf(sA{}))
 		// even though psA is nil, reflect.TypeOf(a) is not nil.
 		require.True(t, reflect.TypeOf(b) != nil)
 		var vSA sA
@@ -85,9 +99,18 @@ func TestTypeOf(t *testing.T) {
 
 		var pA2 ifaceA
 		var pB2 ifaceB
-		// pA2 and pB2 are both nil even if three are not methods defined in the interfaces.
 		require.True(t, reflect.TypeOf(pA2) == nil)
 		require.True(t, reflect.TypeOf(pB2) == nil)
+	})
+	t.Run("interface kind", func(t *testing.T) {
+		var p Printer = PrinterImpl{msg: "hello"}
+		require.True(t, reflect.TypeOf(p).Kind() == reflect.Struct)
+		a := make(map[string]interface{})
+		a["key"] = p
+		require.True(t, reflect.TypeOf(a["key"]).Kind() == reflect.Struct)
+		var c interface{}
+		c = io.Closer(nil)
+		require.True(t, c == nil)
 	})
 }
 

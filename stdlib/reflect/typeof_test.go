@@ -111,6 +111,9 @@ func TestTypeOf(t *testing.T) {
 		var c interface{}
 		c = io.Closer(nil)
 		require.True(t, c == nil)
+		require.True(t, reflect.TypeOf(c) == nil)
+		require.True(t, reflect.ValueOf(c).IsValid() == false)
+		require.True(t, reflect.ValueOf(c) == reflect.Value{})
 	})
 }
 

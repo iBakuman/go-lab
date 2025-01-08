@@ -115,6 +115,18 @@ func TestTypeOf(t *testing.T) {
 		require.True(t, reflect.ValueOf(c).IsValid() == false)
 		require.True(t, reflect.ValueOf(c) == reflect.Value{})
 	})
+
+	t.Run("reflect.Interface", func(t *testing.T) {
+		type Example struct{
+			Field interface{}
+		}
+		e := Example{Field: "Hello"}
+		v := reflect.ValueOf(e)
+		require.True(t, v.FieldByName("Field").Kind() == reflect.Interface)
+		var strA interface{} = "example"
+		v = reflect.ValueOf(strA)
+		require.True(t, v.Kind() == reflect.String)
+	})
 }
 
 type Person struct {

@@ -1,6 +1,8 @@
 module github.com/ibakuman/go-lab
 
-go 1.22
+go 1.22.0
+
+toolchain go1.23.0
 
 require (
 	github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0
@@ -17,14 +19,25 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.31.0
 	github.com/theplant/appkit v0.0.0-20240906024835-9861cd7c7ec7
 	github.com/tidwall/gjson v1.17.1
 	github.com/tnclong/go-que v0.0.0-20240226030728-4e1f3c8ec781
+	go.opentelemetry.io/contrib/bridges/otelslog v0.8.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.58.0
+	go.opentelemetry.io/otel v1.33.0
+	go.opentelemetry.io/otel/exporters/stdout/stdoutlog v0.9.0
+	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v1.33.0
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.33.0
+	go.opentelemetry.io/otel/log v0.9.0
+	go.opentelemetry.io/otel/metric v1.33.0
+	go.opentelemetry.io/otel/sdk v1.33.0
+	go.opentelemetry.io/otel/sdk/log v0.9.0
+	go.opentelemetry.io/otel/sdk/metric v1.33.0
 	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e
 	golang.org/x/net v0.28.0
-	golang.org/x/sys v0.25.0
+	golang.org/x/sys v0.28.0
 	golang.org/x/time v0.5.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240604185151-ef581f913117
 	google.golang.org/grpc v1.64.0
@@ -76,7 +89,6 @@ require (
 	github.com/jjeffery/kv v0.8.1 // indirect
 	github.com/kbinani/screenshot v0.0.0-20240820160931-a8a2c5d0e191 // indirect
 	github.com/klauspost/compress v1.16.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20240819163618-b1d8f4d146e7 // indirect
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -98,7 +110,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/robotn/xgb v0.10.0 // indirect
 	github.com/robotn/xgbutil v0.10.0 // indirect
-	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.23.12 // indirect
 	github.com/shirou/gopsutil/v4 v4.24.8 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
@@ -114,11 +125,8 @@ require (
 	github.com/vcaesar/tt v0.20.1 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.52.0 // indirect
-	go.opentelemetry.io/otel v1.27.0 // indirect
-	go.opentelemetry.io/otel/metric v1.27.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.27.0 // indirect
-	go.opentelemetry.io/otel/trace v1.27.0 // indirect
+	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.opentelemetry.io/otel/trace v1.33.0 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/image v0.20.0 // indirect
 	golang.org/x/mod v0.20.0 // indirect

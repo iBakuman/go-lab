@@ -114,3 +114,15 @@ func TestOrder2(t *testing.T) {
 		require.Equal(t, 1, n)
 	}()
 }
+
+func TestDeferWithFuncCallAsArgument(t *testing.T) {
+	foo := func(num int) {
+		t.Logf("foo: %d", num)
+	}
+	bar := func()int{
+		t.Logf("bar")
+		return 1
+	}
+	defer foo(bar())
+	t.Logf("middle")
+}

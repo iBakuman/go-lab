@@ -67,7 +67,7 @@ func TestValue(t *testing.T) {
 		require.Nil(t, fromContext(ctx, key1, true))
 		require.Equal(t, "contextKey", reflect.TypeOf(key1).Name())
 		require.Equal(t, "int", reflect.TypeOf(int(key1)).Name())
-		require.Equal(t, "int", reflect.ValueOf(key1).Type().Name())
+		require.Equal(t, "contextKey", reflect.ValueOf(key1).Type().Name())
 	})
 
 	t.Run("stored in int, retrieved with contextKey", func(t *testing.T) {
